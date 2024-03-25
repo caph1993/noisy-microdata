@@ -121,14 +121,14 @@ class CategoricalColumnGroupEmbedding(ColumnGroupEmbedding):
         assert np.allclose(X_cat, np.round(X_cat)), X_cat[
             np.argmax(np.abs(X_cat - np.round(X_cat)))
         ]
-        simplex = CategoricalSimplex(n_cat, lin_scale=1)
+        simplex = CategoricalSimplex(n_cat, lin_scale="unit_side", oh_scale="match_lin")
         # Awful temporary fix: The simplex should allow me to set the side scale directly
         side_scale = (
             self.scale * simplex.lin_scale["radius"] / simplex.lin_scale["side"]
         )
         self.simplex = CategoricalSimplex(n_cat, lin_scale=side_scale)  # type:ignore
-        assert self.simplex.lin_scale["side"] == self.scale, (
-            simplex.lin_scale["side"],
+        assert np.allclose(self.simplex.lin_scale["side"], self.scale), (
+            self.simplex.lin_scale["side"],
             self.scale,
         )
         self.n_cat = n_cat
