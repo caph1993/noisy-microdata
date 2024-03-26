@@ -286,6 +286,7 @@ class CategoricalSimplex:
         X_cat = X_cat.astype(int)
         if len(X_cat.shape) == 2 and X_cat.shape[-1] == 1:
             X_cat = X_cat[:, 0]
+        X_cat = np.clip(X_cat, 0, self.n_cat - 1)
         return X_cat
 
     def cat_to_oh(self, X_cat: np.ndarray):
